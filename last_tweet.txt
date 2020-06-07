@@ -1,0 +1,6 @@
+@pytterbotfriend
+Casos de covid-19 em Campinas/SP - 06/06/2020
+Total de casos: 2604
+Total de mortos: 101
+Casos em 24h = 190
+Morte em 24h = 8 #pytterbot
