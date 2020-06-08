@@ -1,6 +1,6 @@
- tuitado em 2020-06-08 16:32:17 UTC
-Casos de covid-19 em Porto Alegre/RS - 07/06/2020
-Total de casos: 1139
-Total de mortos: 44
-Casos em 24h = 8
+ tuitado em 2020-06-08 23:00:02 UTC
+Casos de covid-19 em Crateús/CE - 08/06/2020
+Total de casos: 264
+Total de mortos: 9
+Casos em 24h = 0
 Morte em 24h = 0 #covid19 #bot #python

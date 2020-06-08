@@ -28,6 +28,7 @@ while True:
                         poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                         print(f"Respondendo tweet de @{mention['user']} sobre {estado}")  
                         break
+                  #  if estado is estados.initials[-1]:
                 print("Não encontrada menção a estado")    
                 for cidade in cidades:
                     cidade = str(cidade)
@@ -39,14 +40,13 @@ while True:
                                 poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                                 print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
                                 break
-                    else:
-                        if str(cidade) in tweet:
-                            text = brcovid.get_info.city_cases(cidade)
-                            poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
-                            print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
-                            break
-                print("Não encontrada menção cidade listada em Brasil.IO") 
+                    elif str(cidade) in tweet:
+                        text = brcovid.get_info.city_cases(cidade)
+                        poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                        print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
+                        break
             else:
+                print("Não encontrada menção a cidade listada em Brasil.IO")
                 with open('last_id.txt', 'w') as file:
                     file.write(str(mention['id']))
             print("Taking time...")
