@@ -4,7 +4,10 @@ import time
 import os
 import brcovid.brstates as estados
 import numpy as np
+from brcovid import get_info
 
+lista = np.array(get_info.list_cities())
+np.save('lista_cidades', lista)
 
 cidades = np.load('lista_cidades.npy', allow_pickle=True)
 
