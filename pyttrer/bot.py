@@ -42,6 +42,7 @@ class mentions:
 
     def _getdict(self, updated_id=False):
         if updated_id and self.last_id is not None:
+
             mentions_ = self._listtodict((self.api.mentions_timeline(self.last_id)))
         else:
             mentions_ = self._listtodict((self.api.mentions_timeline()))
@@ -84,25 +85,25 @@ class poster:
         self.api = bot.api
     
     def reply_mention(self, mention, text, in_reply=None, hashtag=None, last_tweet='last_tweet.txt'):
-        # to_user = '@' + mention['user'] + ' tuitado em ' + str(mention['date'])
-        message = text # to_user + '\n' + text
+        to_user = ' tuitado em ' + str(mention['date']) + ' UTC'
+        message = to_user + '\n' + text
         if isinstance(hashtag, str):
             message += hashtag
-            if os.path.exists(last_tweet):
-                with open('last_tweet.txt', 'r') as file:
-                    if message == file.read():
-                        return
-                    else:
-                        if in_reply is not None:
-                            self.api.update_status(message, in_reply_to_status_id=in_reply,
-                                                   auto_populate_reply_metadata=True)
-                        else:
-                            self.api.update_status(message)
-                        with open('last_id.txt', 'w') as file:
-                            file.write(str(mention['id']))
-                        with open('last_tweet.txt', 'w') as file:
-                            file.write(message)
-            else:
-                open(last_tweet, 'a').close()
+        if os.path.exists(last_tweet):
+            with open('last_tweet.txt', 'r') as file:
+                if message == file.read():
+                    return
+        else:
+            open(last_tweet, 'a').close()
+        if in_reply is not None:
+            self.api.update_status(message, in_reply_to_status_id=in_reply,
+                                    auto_populate_reply_metadata=True)
+            with open('last_id.txt', 'w') as file:
+                file.write(str(mention['id']))
+        else:
+            self.api.update_status(message)
+        with open('last_tweet.txt', 'w') as file:
+            file.write(message)
+
 
 
