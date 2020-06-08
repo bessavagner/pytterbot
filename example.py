@@ -12,28 +12,43 @@ mybot = pyttrer.bot.start('keys.conf')
 mentioner = pyttrer.bot.mentions(mybot)
 poster = pyttrer.bot.poster(mybot)
 file_last_id = 'last_id.txt'
+hastags = ' #covid19 #bot #python'
 
 while True:
-    if os.path.exists(file_last_id):
-        with open(file_last_id, 'r') as file:
-            last_id = int(file.read())
     mentions = mentioner.get(updated_id=True)
     for mention in mentions:
-        # print(mention['id'], last_id)
-        if mention['id'] != last_id:
+        if os.path.exists(file_last_id):
+            with open(file_last_id, 'r') as file:
+                last_id = int(file.read().strip())
+        if mention['id'] > last_id:
+            print(mention['id'], last_id)
+            tweet = mention['tweet']
             for estado in estados.initials:
-                if str(estado) in mention['tweet']:
+                if str(estado) in tweet:
                     text = brcovid.get_info.state_cases(estado)
-                    poster.reply_mention(mention, text, hashtag=' #pytterbot')
-                    print(f"Respondendo tweet de @{mention['user']} sobre {estado}")                 
+                    poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                    print(f"Respondendo tweet de @{mention['user']} sobre {estado}")  
+                    break    
             for cidade in cidades:
-                if str(cidade) in mention['tweet']:
-                    text = brcovid.get_info.city_cases(cidade)
-                    poster.reply_mention(mention, text, hashtag=' #pytterbot')
-                    print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
+                cidade = str(cidade)
+                if '\'' in tweet:
+                    tweet = tweet.split('\'')
+                    if len(str(cidade).split()) > 1:
+                        if cidade in tweet:
+                            text = brcovid.get_info.city_cases(cidade)
+                            poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                            print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
+                            break
+                else:
+                    if str(cidade) in tweet:
+                        text = brcovid.get_info.city_cases(cidade)
+                        poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                        print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
+                        break
             with open('last_id.txt', 'w') as file:
                 file.write(str(mention['id']))
-    time.sleep(10)
+
+    time.sleep(15)
 
 
 """mybot = pyttrer.bot.start('keys.conf')
@@ -47,10 +62,10 @@ local = 'Fortaleza'
 text = " Olá, respondendo.."
 
 for mention in mentions:
-    if local in mention['tweet']:
+    if local in tweet:
         if mention['id'] != mentioner.last_id:
-            text += '\'' + mention['tweet'] + '\''
-            print('tweet: ', mention['tweet'])
+            text += '\'' + tweet + '\''
+            print('tweet: ', tweet)
             print("tweeting...")
             poster.reply_mention(mention, text, hashtag='#pytterbot')"""
 

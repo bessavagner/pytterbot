@@ -52,10 +52,9 @@ class mentions:
         for item in mentions_dict:
             infos_.append({
                 'id': item['id'],
-                'user': item['user'].name,
+                'user': item['user'].screen_name,
                 'tweet': item['text'],
                 'date': item['created_at'],
-                'id': item['id']
             })
         return infos_
         
@@ -84,9 +83,9 @@ class poster:
     def __init__(self, bot):
         self.api = bot.api
     
-    def reply_mention(self, mention, text, hashtag=None, last_tweet='last_tweet.txt'):
-        to_user = '@' + mention['user']
-        message = to_user + '\n' + text
+    def reply_mention(self, mention, text, in_reply=None, hashtag=None, last_tweet='last_tweet.txt'):
+        # to_user = '@' + mention['user'] + ' tuitado em ' + str(mention['date'])
+        message = text # to_user + '\n' + text
         if isinstance(hashtag, str):
             message += hashtag
             if os.path.exists(last_tweet):
@@ -94,7 +93,13 @@ class poster:
                     if message == file.read():
                         return
                     else:
-                        self.api.update_status(message)
+                        if in_reply is not None:
+                            self.api.update_status(message, in_reply_to_status_id=in_reply,
+                                                   auto_populate_reply_metadata=True)
+                        else:
+                            self.api.update_status(message)
+                        with open('last_id.txt', 'w') as file:
+                            file.write(str(mention['id']))
                         with open('last_tweet.txt', 'w') as file:
                             file.write(message)
             else:

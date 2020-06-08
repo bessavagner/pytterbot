@@ -4,6 +4,6 @@ art/
 art/
 __pycache__/
 keys.conf
-last_id.txt
 testes.ipynb
 .example.py
+last_tweet.txt
