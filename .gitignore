@@ -1,9 +1,10 @@
 env/
 .vscode/
 art/
-art/
+art
 __pycache__/
 keys.conf
 testes.ipynb
-.example.py
+example.py
+example2.py
 last_tweet.txt
