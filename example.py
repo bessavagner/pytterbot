@@ -16,38 +16,43 @@ hastags = ' #covid19 #bot #python'
 
 while True:
     mentions = mentioner.get(updated_id=True)
-    for mention in mentions:
-        if os.path.exists(file_last_id):
-            with open(file_last_id, 'r') as file:
-                last_id = int(file.read().strip())
-        if mention['id'] > last_id:
-            print(mention['id'], last_id)
-            tweet = mention['tweet']
-            for estado in estados.initials:
-                if str(estado) in tweet:
-                    text = brcovid.get_info.state_cases(estado)
-                    poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
-                    print(f"Respondendo tweet de @{mention['user']} sobre {estado}")  
-                    break    
-            for cidade in cidades:
-                cidade = str(cidade)
-                if '\'' in tweet:
-                    tweet = tweet.split('\'')
-                    if len(str(cidade).split()) > 1:
-                        if cidade in tweet:
+    if len(mentions) > 0:
+        for mention in mentions:
+            if mention['id'] > mentioner.last_id:
+                print(mention['id'], mentioner.last_id)
+                tweet = mention['tweet']
+                print(f"Analisando menção de @{mention['user']}")
+                for estado in estados.initials:
+                    if str(estado) in tweet:
+                        text = brcovid.get_info.state_cases(estado)
+                        poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                        print(f"Respondendo tweet de @{mention['user']} sobre {estado}")  
+                        break
+                print("Não encontrada menção a estado")    
+                for cidade in cidades:
+                    cidade = str(cidade)
+                    if '\'' in tweet:
+                        tweet = tweet.split('\'')
+                        if len(str(cidade).split()) > 1:
+                            if cidade in tweet:
+                                text = brcovid.get_info.city_cases(cidade)
+                                poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
+                                print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
+                                break
+                    else:
+                        if str(cidade) in tweet:
                             text = brcovid.get_info.city_cases(cidade)
                             poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                             print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
                             break
-                else:
-                    if str(cidade) in tweet:
-                        text = brcovid.get_info.city_cases(cidade)
-                        poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
-                        print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
-                        break
-            with open('last_id.txt', 'w') as file:
-                file.write(str(mention['id']))
-
+                print("Não encontrada menção cidade listada em Brasil.IO") 
+            else:
+                with open('last_id.txt', 'w') as file:
+                    file.write(str(mention['id']))
+            print("Taking time...")
+            time.sleep(15)
+            mentioner.last_id = mention['id']
+    print("Idle")
     time.sleep(15)
 
 
