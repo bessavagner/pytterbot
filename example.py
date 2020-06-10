@@ -4,13 +4,17 @@ import time
 import os
 import brcovid.brstates as estados
 import numpy as np
-from brcovid import get_info
 
-lista = np.array(get_info.list_cities())
-np.save('lista_cidades', lista)
+
+"""lista = np.array(brcovid.get_info.list_cities())
+
+np.save('lista_cidades', lista)"""
 
 cidades = np.load('lista_cidades.npy', allow_pickle=True)
 
+"""with open('lista_cidades.txt', 'r', encoding='utf-8') as arq:
+    cidades = arq.readlines()
+"""
 mybot = pyttrer.bot.start('keys.conf')
 mentioner = pyttrer.bot.mentions(mybot)
 poster = pyttrer.bot.poster(mybot)
@@ -31,7 +35,6 @@ while True:
                         poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                         print(f"Respondendo tweet de @{mention['user']} sobre {estado}")  
                         break
-                  #  if estado is estados.initials[-1]:
                 print("Não encontrada menção a estado")    
                 for cidade in cidades:
                     cidade = str(cidade)
@@ -43,7 +46,7 @@ while True:
                                 poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                                 print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
                                 break
-                    elif str(cidade) in tweet:
+                    elif cidade in tweet:
                         text = brcovid.get_info.city_cases(cidade)
                         poster.reply_mention(mention, text, in_reply=mention['id'], hashtag=hastags)
                         print(f"Respondendo tweet de @{mention['user']} sobre {cidade}")
@@ -56,7 +59,7 @@ while True:
             time.sleep(15)
             mentioner.last_id = mention['id']
     print("Idle")
-    time.sleep(15)
+    time.sleep(30)
 
 
 """mybot = pyttrer.bot.start('keys.conf')
